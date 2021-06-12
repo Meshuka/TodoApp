@@ -1,0 +1,122 @@
+*{
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+  font-size: medium;
+}
+
+.header {
+  background-color: aqua;
+  padding: 10px 10px;
+  size: 40px;
+  text-align: center;
+}
+
+.header:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.container{
+  padding: 10px 10px;
+}
+.add-task{
+  margin: 20px 0px 0px 30px;
+  size: 30px;
+}
+.input-task{
+  margin-right: 0;
+  border: none;
+  padding: 10px;
+  border-radius: 0;
+  width: 75%;
+  font-size: 16px;
+}
+.input-edit{
+  border:none;
+  border-radius: 0;
+  background-color:inherit;
+  color:brown;
+}
+.addbtn{
+  padding: 10px;
+  width: 25%;
+  margin-left: 0;
+  background-color:rgb(187, 137, 235) ;
+  color:black;
+  text-align: center;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-weight: bold;
+}
+.addBtn:hover {
+  background-color: #bbb;
+}
+
+.cross-text{
+  text-decoration: line-through;
+}
+
+ul li{
+  cursor: pointer;
+  position: relative;
+  padding: 12px 8px 12px 40px;
+  list-style-type: none;
+  font-size: 18px;
+  transition: 0.2s;
+}
+
+ul li:hover{
+  background-color:aquamarine ;
+}
+
+.fa{
+  position: absolute;
+  right:30px;
+  padding: auto;
+}
+
+.edit-task{
+  position: absolute;
+  right:60px;
+  padding: auto;
+}
+
+.popup-box {
+  position: fixed;
+  background: #00000050;
+  width: 100%;
+  height: 100vh;
+  top: 0;
+  left: 0;
+}
+ 
+.box {
+  position: relative;
+  width: 70%;
+  margin: 0 auto;
+  height: auto;
+  max-height: 70vh;
+  margin-top: calc(100vh - 85vh - 20px);
+  background: #fff;
+  border-radius: 4px;
+  padding: 20px;
+  border: 1px solid #999;
+  overflow: auto;
+}
+ 
+.close-icon {
+  content: 'x';
+  cursor: pointer;
+  position: fixed;
+  right: calc(15% - 30px);
+  top: calc(100vh - 85vh - 33px);
+  background: #ededed;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  line-height: 20px;
+  text-align: center;
+  border: 1px solid #999;
+  font-size: 20px;
+}
