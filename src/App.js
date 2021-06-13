@@ -5,9 +5,12 @@ import './App.css';
 const App = () =>{
     const [task, setTask] = useState('')
     const [taskList, setTaskList] = useState([])
-    const [togglePopUp, setToggle] = useState(false)
+    // const [togglePopUp, setToggle] = useState(false)
     const [toggleShowCompleted, setToggleShowCompleted]= useState(false)
     const [completedList, setCompletedList] = useState([])
+    const [editId, setEditId] = useState(null)
+    const [edittingText, setEdittingText] = useState("")
+
     const addTask=(e)=>{
         e.preventDefault();
         console.log(task)
@@ -23,8 +26,36 @@ const App = () =>{
         // localStorage.setItem('task', taskList)
         }
     }
+    const handleEdit=(id)=>{
+        const temp1= taskList.findIndex((x)=> x.id===id);
+        const temp = taskList[temp1].value;
+        console.log(temp)
+        setEdittingText(temp);
+        console.log(edittingText)
+        // setToggle(!togglePopUp);
+        setEditId(id);
+    }
+    const submitEdit=(e, id)=>{
+        // const idOfEdit = taskList.findIndex((x)=> x.id===id);
+        // taskList[idOfEdit]= edittingText;
+        // const newList = [...taskList]
+        // setTaskList(newList)
+        // setEditId(null)
+        e.preventDefault()
+        const updatedTodos = [...taskList].map((todo) => {
+            if (todo.id === id) {
+            todo.value = edittingText;
+            }
+            return todo;
+        });
+        setTaskList(updatedTodos);
+        setEditId(null);
+        setEdittingText("");
+        // setToggle(!togglePopUp);
+    }
     const toggleHandler=()=>{
-        setToggle(!togglePopUp);
+        // setToggle(!togglePopUp);
+        setEditId(null);
     }   
     const showCompletedLists=()=>{
         setToggleShowCompleted(!toggleShowCompleted);
@@ -106,29 +137,38 @@ const App = () =>{
                                             <li>
                                             <input type="checkbox" className="task-comlete" onClick={e => completedTask(e, t.id)}></input>
                                             {t.value}
-                                            <button className='edit-task' onClick={toggleHandler}>Edit</button>
-                                            {/* <i onClick={e => editTask(e,t.id)}>{t.value}</i> */}
-                                            {/* {t.toEdit && togglePopUp ?  */}
-                                            { togglePopUp ?
+                                            {/* <input type="text" onChange={e=>setEdittingText(e.target.value)} value={edittingText} autoFocus></input> */}
+                                            {/* {editId == t.id ? 
+                                            (<div>
+                                                {t.value}
+                                            </div>):
+                                            (<input type="text" onChange={e=>setEdittingText(e.target.value)} value={edittingText} autoFocus></input>)
+                                            } */}
+                                            <button className='edit-task' onClick={()=>{handleEdit(t.id)}}>Edit</button>
+                                            {/* {editId == t.id ? (
+                                            <button className='edit-task' onClick={()=>submitEdit(t.id)}>Sumbit Edit</button>
+                                            ):(<button className='edit-task' onClick={setEditId(t.id)}>Edit</button>)} */}
+                                            {/* <button className='edit-task' onClick={setEditId(t.id)}>Edit</button> */}
+                                            {/* { togglePopUp ? */}
+                                            { editId ===t.id ?
                                             <div className='popup-box'>
                                                 <div className='box'>
                                                 <span className='close-icon' onClick={toggleHandler}>X</span>
                                                 Edit here!
                                                 <br></br>
                                                 <input type="text" className="input-edit" 
-                                                value={t.value} 
+                                                value={edittingText} 
                                                 autoFocus
-                                                onChange={e => submitEdittedTask(e, t.id)}
+                                                onChange={e=>setEdittingText(e.target.value)}
                                                 onKeyPress={e =>{
                                                     if(e.key === 'Enter') {
-                                                        toggleHandler()}}}>
+                                                        submitEdit(e, editId)}}}>
                                                 </input>
-                                                <button className='submit' onClick={toggleHandler}>Submit</button>
+                                                <button className='submit' onClick={e => submitEdit(e, editId)}>Submit</button>
                                                 </div>
                                             </div>
                                             : null}
                                             <button className='fa' onClick={e => deleteTask(e,t.id)}>Delete</button>
-                                            {/* <i className="fa fa-trash" onClick={e => deleteTask(e, t.id)}></i> */}
                                             </li>
                                         </div>}
                                     </div>
@@ -145,9 +185,8 @@ const App = () =>{
                 <div className='completed-task-list'>
                     {toggleShowCompleted ?
                     <div>
-                    {completedList !== [] ? ( //[0: 'a' , 1: 'b']
+                    {completedList !== [] ? ( 
                     <ul>        
-                    {/* every child element must have a key value. in this case div can be assigned a key|| use index as a last resort. here we have an id assigned to each task so using t.id as key*/}
                         {completedList.map((t) =>(
                             <div key={t.id1}>
                                 {t.isCompleted ? 
