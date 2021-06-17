@@ -5,20 +5,30 @@ import './App.css';
 const App = () =>{
     const [task, setTask] = useState('')
     const [taskList, setTaskList] = useState([])
-    // const [togglePopUp, setToggle] = useState(false)
     const [toggleShowCompleted, setToggleShowCompleted]= useState(false)
     const [completedList, setCompletedList] = useState([])
     const [editId, setEditId] = useState(null)
     const [edittingText, setEdittingText] = useState("")
+    const [date, setDateTime] = useState(new Date())
+    const [editted, setEditted] = useState(new Date())
+    const [editCount, setEitCount] = useState(null)
 
     const addTask=(e)=>{
         e.preventDefault();
+        setDateTime(new Date());
+        // const currentDate = date.toLocaleTimeString();
+        const currentDate = date.toLocaleDateString() + ' Time:' + date.toLocaleTimeString();
+        console.log('first current date' + currentDate);
+        const updatedDate = currentDate;
         console.log(task)
         if (task !== ""){
             const taskDetails ={
                 id: Math.floor(Math.random()*1000),
                 value: task,
                 isCompleted: false,
+                dateOfCreation: currentDate,
+                dateOfUpdation: updatedDate,
+                editCount: 0,
             }
         setTaskList((oldItems)=> [...oldItems, taskDetails])
         console.log(taskList)
@@ -29,32 +39,29 @@ const App = () =>{
     const handleEdit=(id)=>{
         const temp1= taskList.findIndex((x)=> x.id===id);
         const temp = taskList[temp1].value;
-        console.log(temp)
         setEdittingText(temp);
-        console.log(edittingText)
-        // setToggle(!togglePopUp);
         setEditId(id);
+        setEditted(new Date());
     }
     const submitEdit=(e, id)=>{
-        // const idOfEdit = taskList.findIndex((x)=> x.id===id);
-        // taskList[idOfEdit]= edittingText;
-        // const newList = [...taskList]
-        // setTaskList(newList)
-        // setEditId(null)
         e.preventDefault()
+        // const updatedDate1 = editted.toLocaleTimeString();
+        const updatedDate1 = editted.toLocaleDateString() + ' Time:' + editted.toLocaleTimeString();
+        console.log('first updated date'+ updatedDate1)
         const updatedTodos = [...taskList].map((todo) => {
             if (todo.id === id) {
-            todo.value = edittingText;
+            todo.value = edittingText
+            todo.dateOfUpdation= updatedDate1
+            todo.editCount = todo.editCount + 1
+            setEitCount(todo.editCount)
             }
             return todo;
         });
         setTaskList(updatedTodos);
         setEditId(null);
         setEdittingText("");
-        // setToggle(!togglePopUp);
     }
     const toggleHandler=()=>{
-        // setToggle(!togglePopUp);
         setEditId(null);
     }   
     const showCompletedLists=()=>{
@@ -73,6 +80,10 @@ const App = () =>{
             id1: tempCompleted.id,
             value: tempCompleted.value,
             isCompleted: !tempCompleted.isCompleted,
+            dateOfCreation: tempCompleted.dateOfCreation,
+            dateOfUpdation: tempCompleted.dateOfUpdation,
+            editCount: tempCompleted.editCount,
+
         }
         setCompletedList([...completedList, taskDetails1])
         setTaskList(taskList.filter((t) => t.id !==id));
@@ -86,21 +97,14 @@ const App = () =>{
         const taskDetails2={
             id: stillIncomplete.id1,
             value: stillIncomplete.value,
-            isCompleted: !stillIncomplete.isCompleted
+            isCompleted: !stillIncomplete.isCompleted,
+            dateOfCreation: stillIncomplete.dateOfCreation,
+            dateOfUpdation: stillIncomplete.dateOfUpdation,
+            editCount: stillIncomplete.editCount,
         }
         setTaskList([...taskList, taskDetails2]);
         //removing the task from completedTaskList
         setCompletedList(completedList.filter((t)=> t.id1 !== id1))
-    }
-    const submitEdittedTask=(e,id)=>{
-        e.preventDefault();
-        const idOfCompleted = taskList.findIndex((x)=> x.id===id)
-        const newTaskList= [...taskList]
-        newTaskList[idOfCompleted] = {
-            ...newTaskList[idOfCompleted],
-            value: e.target.value
-        }
-        setTaskList(newTaskList)
     }
     return(
         <div>
@@ -125,12 +129,12 @@ const App = () =>{
                 </div>
                 <div className='task-list'>
                 <div className='incomplete-task-list'>
-                    {/* <div className='incomplete-tasks-list'> */}
                         {taskList !== [] ? ( //[0: 'a' , 1: 'b']
                         <div>
                             <ul>        
                             {/* every child element must have a key value. in this case div can be assigned a key|| use index as a last resort. here we have an id assigned to each task so using t.id as key*/}
-                                {taskList.map((t) =>(
+                                {taskList.sort(({id: previousID}, {id: currentID})=> previousID - currentID)
+                                .map((t) =>(
                                     <div key={t.id}>
                                         {t.isCompleted ? (null):
                                         <div className='list-item' >
@@ -138,18 +142,23 @@ const App = () =>{
                                             <input type="checkbox" className="task-comlete" onClick={e => completedTask(e, t.id)}></input>
                                             {t.value}
                                             {/* <input type="text" onChange={e=>setEdittingText(e.target.value)} value={edittingText} autoFocus></input> */}
-                                            {/* {editId == t.id ? 
-                                            (<div>
-                                                {t.value}
-                                            </div>):
-                                            (<input type="text" onChange={e=>setEdittingText(e.target.value)} value={edittingText} autoFocus></input>)
+                                            {/* {toggleEditable ? (
+                                            <input type="text" 
+                                            onChange={e=>setEdittingText(e.target.value)} 
+                                            value={edittingText} 
+                                            autoFocus
+                                            onKeyPress={e =>{
+                                                if(e.key === 'Enter') {
+                                                    submitEdit(e, editId)}}}></input>)
+                                            :<div>{t.value}</div>
+                                            }
+                                            {toggleEditable? (<button className='submit' onClick={e => submitEdit(e, editId)}>Submit</button>): 
+                                            (<button className='edit-task' onClick={()=>{handleEdit(t.id)}}>Edit</button>)
                                             } */}
-                                            <button className='edit-task' onClick={()=>{handleEdit(t.id)}}>Edit</button>
-                                            {/* {editId == t.id ? (
-                                            <button className='edit-task' onClick={()=>submitEdit(t.id)}>Sumbit Edit</button>
-                                            ):(<button className='edit-task' onClick={setEditId(t.id)}>Edit</button>)} */}
-                                            {/* <button className='edit-task' onClick={setEditId(t.id)}>Edit</button> */}
-                                            {/* { togglePopUp ? */}
+                                        <button className='edit-task' onClick={()=>{handleEdit(t.id)}}>Edit</button>
+                                        {t.editCount > 0 ? 
+                                        (<i className='date'>Updated on: {t.dateOfUpdation}</i>)
+                                        :(<i className='date'>Created on: {t.dateOfCreation}</i>)}
                                             { editId ===t.id ?
                                             <div className='popup-box'>
                                                 <div className='box'>
@@ -176,8 +185,7 @@ const App = () =>{
                             </ul>
                             
                         </div>)
-                        : null}
-                        
+                        : null}        
                 </div>
                 <div className='showListbtn'>
                         <button className='show-completed' onClick={showCompletedLists}>Show completed tasks</button>

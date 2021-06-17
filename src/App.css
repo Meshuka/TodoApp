@@ -68,7 +68,7 @@ ul li{
 }
 
 ul li:hover{
-  background-color:aquamarine ;
+  background-color:rgb(39, 250, 215) ;
 }
 
 .fa{
@@ -80,6 +80,13 @@ ul li:hover{
 .edit-task{
   position: absolute;
   right:100px;
+  padding: auto;
+}
+.date{
+  position: absolute;
+  right: 150px;
+  font-weight: bold;
+  display: inline;
   padding: auto;
 }
 
