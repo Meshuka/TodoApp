@@ -133,8 +133,7 @@ const App = () =>{
                         <div>
                             <ul>        
                             {/* every child element must have a key value. in this case div can be assigned a key|| use index as a last resort. here we have an id assigned to each task so using t.id as key*/}
-                                {taskList.sort(({id: previousID}, {id: currentID})=> previousID - currentID)
-                                .map((t) =>(
+                                {taskList.map((t) =>(
                                     <div key={t.id}>
                                         {t.isCompleted ? (null):
                                         <div className='list-item' >
