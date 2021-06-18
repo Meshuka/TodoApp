@@ -10,7 +10,9 @@
   size: 50px;
   text-align: center;
 }
-
+.container{
+  padding: 10px 50px 10px 50px;
+}
 .header:after {
   content: "";
   display: table;
@@ -18,17 +20,14 @@
 }
 
 .container{
-  padding: 10px 10px;
+  margin: 5px 10px;
 }
 .add-task{
-  margin: 20px 0px 0px 30px;
+  margin: 10px 0px 30px 0px;
   size: 30px;
 }
 .input-task{
-  margin-right: 0;
-  /* border: none; */
   padding: 10px;
-  border-radius: 0;
   width: 75%;
   font-size: 16px;
 }
@@ -59,9 +58,10 @@
 }
 
 ul li{
-  cursor: pointer;
+  cursor: auto;
+  margin: 0;
   position: relative;
-  padding: 12px 8px 12px 40px;
+  padding: 10px 0px 12px 10px;
   list-style-type: none;
   font-size: 18px;
   transition: 0.2s;
@@ -71,7 +71,7 @@ ul li:hover{
   background-color:rgb(39, 250, 215) ;
 }
 
-.fa{
+.delete{
   position: absolute;
   right:30px;
   padding: auto;
@@ -130,10 +130,26 @@ ul li:hover{
 }
 .showListbtn{
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .task-list{
   display: flex;
   flex-direction: column;
+}
+
+.task-complete{
+  cursor: pointer;
+}
+
+.task-margin{
+  margin-left: 0px;
+}
+
+.list-itemz{
+  margin-left: 0px;
+}
+
+.show-completed-list{
+  cursor: pointer;
 }

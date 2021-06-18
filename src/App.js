@@ -11,7 +11,9 @@ const App = () =>{
     const [edittingText, setEdittingText] = useState("")
     const [date, setDateTime] = useState(new Date())
     const [editted, setEditted] = useState(new Date())
+    // const [completedDate, setCompletedDate] = useState(new Date())
     const [editCount, setEitCount] = useState(null)
+    const [completedCount, setCompletedCount] = useState(0)
 
     const addTask=(e)=>{
         e.preventDefault();
@@ -20,6 +22,7 @@ const App = () =>{
         const currentDate = date.toLocaleDateString() + ' Time:' + date.toLocaleTimeString();
         console.log('first current date' + currentDate);
         const updatedDate = currentDate;
+        // const completedDate = currentDate;
         console.log(task)
         if (task !== ""){
             const taskDetails ={
@@ -28,6 +31,7 @@ const App = () =>{
                 isCompleted: false,
                 dateOfCreation: currentDate,
                 dateOfUpdation: updatedDate,
+                // dateOfCompletion: currentDate,
                 editCount: 0,
             }
         setTaskList((oldItems)=> [...oldItems, taskDetails])
@@ -75,6 +79,7 @@ const App = () =>{
         e.preventDefault();
         const idOfCompleted = taskList.findIndex((x)=> x.id===id); //finding the completed task using task id
         //adding the task to completedTask list
+
         const tempCompleted = taskList[idOfCompleted];
         const taskDetails1={
             id1: tempCompleted.id,
@@ -87,6 +92,8 @@ const App = () =>{
         }
         setCompletedList([...completedList, taskDetails1])
         setTaskList(taskList.filter((t) => t.id !==id));
+        setCompletedCount(completedCount+1)
+
     }
     const incompleteTask=(e,id1)=>{
         e.preventDefault();
@@ -105,6 +112,7 @@ const App = () =>{
         setTaskList([...taskList, taskDetails2]);
         //removing the task from completedTaskList
         setCompletedList(completedList.filter((t)=> t.id1 !== id1))
+        setCompletedCount(completedCount-1)
     }
     return(
         <div>
@@ -130,16 +138,15 @@ const App = () =>{
                 <div className='task-list'>
                 <div className='incomplete-task-list'>
                         {taskList !== [] ? ( //[0: 'a' , 1: 'b']
-                        <div>
+                        <div className='task-margin'>
                             <ul>        
                             {/* every child element must have a key value. in this case div can be assigned a key|| use index as a last resort. here we have an id assigned to each task so using t.id as key*/}
                                 { taskList.map((t) =>(
-
                                     <div key={t.id}>
                                         {t.isCompleted ? (null):
                                         <div className='list-item' >
                                             <li>
-                                            <input type="checkbox" className="task-comlete" onClick={e => completedTask(e, t.id)}></input>
+                                            <input type="checkbox" className="task-complete" onClick={e => completedTask(e, t.id)}></input>
                                             {t.value}
                                             {/* <input type="text" onChange={e=>setEdittingText(e.target.value)} value={edittingText} autoFocus></input> */}
                                             {/* {toggleEditable ? (
@@ -177,7 +184,7 @@ const App = () =>{
                                                 </div>
                                             </div>
                                             : null}
-                                            <button className='fa' onClick={e => deleteTask(e,t.id)}>Delete</button>
+                                            <button className='delete' onClick={e => deleteTask(e,t.id)}>Delete</button>
                                             </li>
                                         </div>}
                                     </div>
@@ -188,7 +195,15 @@ const App = () =>{
                         : null}        
                 </div>
                 <div className='showListbtn'>
-                        <button className='show-completed' onClick={showCompletedLists}>Show completed tasks</button>
+                    {completedCount > 0 ? 
+                    ( <div>
+                        {toggleShowCompleted ? 
+                        (<button className='fa fa-angle-down' onClick={showCompletedLists}> Completed</button>):
+                        (<button className='fa fa-angle-up'onClick={showCompletedLists}> Completed</button>)}
+                    </div>
+                    )
+                    // <i className='fa fa-angle-up' onClick={showCompletedLists}>Show completed tasks</i>)
+                    : (null)}                        
                 </div>
                 <div className='completed-task-list'>
                     {toggleShowCompleted ?
@@ -202,6 +217,9 @@ const App = () =>{
                                     <li>
                                     <input type="checkbox" className="task-comlete" defaultChecked onClick={e => incompleteTask(e, t.id1)}></input>
                                     {t.value}
+                                    {/* {t.dateOfCreation!= t.dateOfUpdation ? 
+                                    (<i className='date'>Completed on: {t.dateOfUpdation}</i>)
+                                    :(<i className='date'>Completed on: {t.dateOfCreation}</i>)} */}
                                 </li>
                                 </div>
                                 :null}
