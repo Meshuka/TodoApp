@@ -11,6 +11,7 @@
     "react-scripts": "1.1.5"
   },
   "scripts": {
+    "format": "prettier --write \"src/**/*.{js,jsx}\"",
     "start": "react-scripts start",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
@@ -19,6 +20,7 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
-    "gh-pages": "^3.2.1"
+    "gh-pages": "^3.2.1",
+    "prettier": "^2.3.1"
   }
 }
